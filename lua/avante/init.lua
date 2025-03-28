@@ -71,6 +71,7 @@ function H.keymaps()
   vim.keymap.set("n", "<Plug>(AvanteToggleDebug)", function() M.toggle.debug() end)
   vim.keymap.set("n", "<Plug>(AvanteToggleHint)", function() M.toggle.hint() end)
   vim.keymap.set("n", "<Plug>(AvanteToggleSuggestion)", function() M.toggle.suggestion() end)
+  vim.keymap.set("n", "<Plug>(AvanteAgentMode)", function() require("avante.api").agent_mode() end, { noremap = true })
 
   vim.keymap.set({ "n", "v" }, "<Plug>(AvanteConflictOurs)", function() Diff.choose("ours") end)
   vim.keymap.set({ "n", "v" }, "<Plug>(AvanteConflictBoth)", function() Diff.choose("both") end)
@@ -111,6 +112,12 @@ function H.keymaps()
       Config.mappings.focus,
       function() require("avante.api").focus() end,
       { desc = "avante: focus" }
+    )
+    Utils.safe_keymap_set(
+      "n",
+      Config.mappings.agent_mode,
+      function() require("avante.api").agent_mode() end,
+      { desc = "avante: modo agente cursor" }
     )
 
     Utils.safe_keymap_set("n", Config.mappings.toggle.default, function() M.toggle() end, { desc = "avante: toggle" })

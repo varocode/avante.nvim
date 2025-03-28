@@ -393,12 +393,13 @@ M._defaults = {
     refresh = "<leader>ar",
     focus = "<leader>af",
     stop = "<leader>aS",
+    agent_mode = "<leader>ag", -- Nuevo atajo para el modo agente
     toggle = {
       default = "<leader>at",
       debug = "<leader>ad",
       hint = "<leader>ah",
-      suggestion = "<leader>as",
-      repomap = "<leader>aR",
+      suggestion = "<leader>a<tab>",
+      repomap = "<leader>am",
     },
     sidebar = {
       apply_all = "A",

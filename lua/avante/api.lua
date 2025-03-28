@@ -172,6 +172,62 @@ function M.get_suggestion()
   return suggestion
 end
 
+---@param opts? {prompt?: string, file_paths?: string[]}
+function M.agent_mode(opts)
+  opts = opts or {}
+  local Llm = require("avante.llm")
+  local tools = require("avante.llm_tools").get_tools("", {})
+
+  -- Buscar la herramienta cursor_agent
+  local cursor_agent
+  for _, tool in ipairs(tools) do
+    if tool.name == "cursor_agent" then
+      cursor_agent = tool
+      break
+    end
+  end
+
+  if not cursor_agent then
+    Utils.notify("No se encontró la herramienta cursor_agent", vim.log.levels.ERROR)
+    return
+  end
+
+  -- Si ya hay un prompt, ejecutar directamente
+  if opts.prompt then
+    cursor_agent({
+      prompt = opts.prompt,
+      file_paths = opts.file_paths or {},
+    },
+    function(msg)
+      Utils.notify(msg, vim.log.levels.INFO)
+    end,
+    function(result, error)
+      if error then
+        Utils.notify("Error en el agente: " .. error, vim.log.levels.ERROR)
+      else
+        Utils.notify(result, vim.log.levels.INFO)
+      end
+    end)
+    return
+  end
+
+  -- De lo contrario, mostrar prompt para pedir instrucciones
+  local prompt_input = PromptInput:new({
+    submit_callback = function(input)
+      if input and input ~= "" then
+        M.agent_mode({prompt = input, file_paths = opts.file_paths})
+      end
+    end,
+    close_on_submit = true,
+    win_opts = {
+      border = Config.windows.ask.border,
+      title = { { "Modo Agente Cursor - Describe tu tarea", "FloatTitle" } },
+    },
+    start_insert = true,
+  })
+  prompt_input:open()
+end
+
 ---@param opts? AskOptions
 function M.refresh(opts)
   opts = opts or {}

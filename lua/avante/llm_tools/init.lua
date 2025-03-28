@@ -559,6 +559,7 @@ end
 ---@type AvanteLLMTool[]
 M._tools = {
   require("avante.llm_tools.dispatch_agent"),
+  require("avante.llm_tools.cursor_agent"),
   require("avante.llm_tools.glob"),
   {
     name = "rag_search",
