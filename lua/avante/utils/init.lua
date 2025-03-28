@@ -321,10 +321,15 @@ end
 function M.norm(path) return vim.fs.normalize(path) end
 
 ---@param msg string|string[]
----@param opts? LazyNotifyOpts
+---@param opts? LazyNotifyOpts|integer
 function M.notify(msg, opts)
   if vim.in_fast_event() then
     return vim.schedule(function() M.notify(msg, opts) end)
+  end
+
+  -- Si opts es un número (nivel de log), convertirlo a tabla
+  if type(opts) == "number" then
+    opts = { level = opts }
   end
 
   opts = opts or {}
